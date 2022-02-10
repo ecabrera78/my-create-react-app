@@ -1,9 +1,10 @@
 #! /usr/bin/env node --color
 const yargs = require('yargs');
 const createApp = require('./createReactApp');
-const chalk = require('chalk');
+const { bold } = require('kleur');
+const kleur = require('kleur');
 
-chalk.enabled = true;
+kleur.enabled = true;
 
 const usageMsg = '\nUsage: ecabrera-cli <command> [options]';
 const options = yargs
@@ -19,10 +20,10 @@ const options = yargs
 
 if (options._[0] === 'react-app') {
 	try {
-		console.log('Create react app');
+		console.log(bold().green('Create react app'));
 		createApp.createReactApp(yargs.argv.n);
 		console.log('Process completed...');
 	} catch (error) {
-		console.error(chalk.red('Error: ' + error.message));
+		console.error(bold().red('Error: ' + error.message));
 	}
 }

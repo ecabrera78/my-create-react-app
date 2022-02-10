@@ -3,10 +3,9 @@ const path = require('path');
 const os = require('os');
 const process = require('process');
 const childProcess = require('child_process');
-const chalk = require('chalk');
+const kleur, { bold } = require('kleur');
 
-chalk.enabled = true;
-
+kleur.enabled = true;
 const basePath = process.cwd();
 const dependencies = {
 	dev:
@@ -31,26 +30,28 @@ function createReactApp(name) {
 function appExists(appPath) {
 	if (fs.existsSync(appPath)) {
 		console.error(
-			'FATAL ERROR: App ' +
-				path.basename(appPath) +
-				' already exists. Please change app name.'
+			bold().red(
+				'FATAL ERROR: App ' +
+					path.basename(appPath) +
+					' already exists. Please change app name.'
+			)
 		);
 		process.exit(1);
 	}
 }
 
 function createFolder(dirPath) {
-	console.log(chalk.green('Create dir ') + chalk.blue(dirPath));
+	console.log(bold().green('Create dir ') + bold().blue(dirPath));
 	fs.mkdir(dirPath, err => {
 		if (err) {
-			console.error(err.message);
+			console.error(bold().red(err.message));
 			process.exit(1);
 		}
 	});
 }
 
 function createPackageJson(name, appPath) {
-	console.log(chalk.green('Writting package.json'));
+	console.log(bold().green('Writting package.json'));
 	const initTemplate = {
 		name: name,
 		version: '1.0.0',
@@ -66,12 +67,12 @@ function createPackageJson(name, appPath) {
 }
 
 function installPackages(appPath) {
-	console.log('Installing DEV dependencies...');
+	console.log(bold().green('Installing DEV dependencies...'));
 	childProcess.execSync('npm i -D ' + dependencies.dev, {
 		cwd: appPath,
 		stdio: 'inherit',
 	});
-	console.log('Installing PROD dependencies...');
+	console.log(bold().green('Installing PROD dependencies...'));
 	childProcess.execSync('npm i -s ' + dependencies.prod, {
 		cwd: appPath,
 		stdio: 'inherit',
